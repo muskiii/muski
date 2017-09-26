@@ -1,0 +1,28 @@
+{
+  "name": "muski",
+  "version": "1.0.0",
+  "description": "muski node api for a variety of apps",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/muskiii/muski.git"
+  },
+  "author": "jose maria fabiano",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/muskiii/muski/issues"
+  },
+  "homepage": "https://github.com/muskiii/muski#readme",
+  "devDependencies": {
+    "body-parser": "^1.18.2",
+    "nodemon": "^1.12.1"
+  },
+  "dependencies": {
+    "express": "^4.15.5",
+    "mongoose": "^4.11.13"
+  }
+}
