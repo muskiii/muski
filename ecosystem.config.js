@@ -1,7 +1,7 @@
 module.exports = {
   apps: [{
     name: 'muski',
-    script:  'nodemon ./server.js'
+    script:  'server.js'
   }],
   deploy: {
     production: {
