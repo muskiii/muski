@@ -16,7 +16,7 @@ module.exports = {
       key: '~/.ssh/AWSmuskiprivatekey.pem',
       ref: 'origin/development',
       repo: 'git@github.com:muskiii/muski.git',
-      path: '/home/ubuntu/development/muski',
+      path: '/home/ubuntu/production/muski',
       'post-deploy': 'npm install && pm2 startOrRestart ecosystem.config.js'
     },
     dev : {
@@ -25,11 +25,11 @@ module.exports = {
       key: '~/.ssh/AWSmuskiprivatekey.pem',
       ref: 'origin/development',
       repo : 'git@github.com:muskiii/muski.git',
-      path : '/home/ubuntu/production/muski',
-      'post-deploy' : 'npm install && pm2 reload ecosystem.config.js --env dev',
+      path : '/home/ubuntu/development/muski',
+      'post-deploy' : 'npm install && pm2 startOrRestart ecosystem.config.js --env dev',
       env  : {
         NODE_ENV: 'dev'
       }
-
+    }
   }
 }
