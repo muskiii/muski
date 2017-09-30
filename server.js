@@ -21,7 +21,7 @@ if(process.env.NODE_ENV=="dev"){
 });
 }
 
-if(process.env.NODE_ENV=="production"){
+if(process.env.NODE_ENV=="prod"){
   app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname + '/public/ProdIndex.html'));
 });
@@ -36,6 +36,6 @@ app.use(function(req, res){
   res.status(404).send({url: req.originalUrl + ' not found'})
 });
 
-app.listen(port);
+app.listen(process.env.PORT);
 console.log("ENV: "+process.env.NODE_ENV);
 console.log('muski Rest API server started on:' + port);
