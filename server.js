@@ -37,5 +37,7 @@ app.use(function(req, res){
 });
 
 app.listen(port);
+
 console.log("ENV: "+process.env.NODE_ENV);
+
 console.log('muski Rest API server started on:' + port);
