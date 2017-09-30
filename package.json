@@ -4,6 +4,7 @@
   "description": "muski node api for a variety of apps",
   "main": "server.js",
   "scripts": {
+    "run-local": "NODE_ENV=dev nodemon server.js",
     "restart": "pm2 startOrRestart ecosystem.config.js",
     "deploy-prod": "pm2 deploy ecosystem.config.js production",
     "deploy-dev": "pm2 deploy ecosystem.config.js dev",
