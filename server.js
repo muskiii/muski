@@ -36,6 +36,12 @@ app.use(function(req, res){
   res.status(404).send({url: req.originalUrl + ' not found'})
 });
 
+<<<<<<< HEAD
 app.listen(process.env.PORT);
+=======
+app.listen(port);
+
+>>>>>>> e3a4a81b4f4d21cf1075f5c40465944fe0b4f5be
 console.log("ENV: "+process.env.NODE_ENV);
+
 console.log('muski Rest API server started on:' + port);
