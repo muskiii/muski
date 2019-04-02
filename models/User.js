@@ -4,13 +4,19 @@ var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 var secret = require('../config').secret;
 
+
+let configuration = {
+  minRate: { type : Number, required: [true, "can't be blank"] }
+}
+
 var UserSchema = new mongoose.Schema({
   username: { type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/^[a-zA-Z0-9]+$/, 'is invalid'], index: true },
   email: { type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/\S+@\S+\.\S+/, 'is invalid'], index: true },
   bio: String,
   image: String,
   hash: String,
-  salt: String
+  salt: String,
+  config: {type :configuration, required:false}  
 }, { timestamps: true });
 
 UserSchema.methods.setPassword = function (password) {
@@ -41,7 +47,8 @@ UserSchema.methods.toAuthJSON = function () {
     email: this.email,
     token: this.generateJWT(),
     bio: this.bio,
-    image: this.image
+    image: this.image,
+    config: this.config
   };
 };
 

@@ -4,7 +4,7 @@ var passport = require('passport');
 var User = mongoose.model('User');
 var auth = require('../auth');
 
-router.get('/user', auth.required, function(req, res, next){
+router.get('/users', auth.required, function(req, res, next){
   User.findById(req.payload.id).then(function(user){
     if(!user){ return res.sendStatus(401); }
 
@@ -12,7 +12,7 @@ router.get('/user', auth.required, function(req, res, next){
   }).catch(next);
 });
 
-router.put('/user', auth.required, function(req, res, next){
+router.put('/users', auth.required, function(req, res, next){
   User.findById(req.payload.id).then(function(user){
     if(!user){ return res.sendStatus(401); }
 
@@ -69,6 +69,20 @@ router.post('/users', function(req, res, next){
 
   user.save().then(function(){
     return res.json({user: user.toAuthJSON()});
+  }).catch(next);
+});
+
+router.put('/users/config', auth.required, function(req, res, next){
+  User.findById(req.payload.id).then(function(user){
+    if(!user){ return res.sendStatus(401); }
+
+    // only update fields that were actually passed...
+    if(typeof req.body.user.config !== 'undefined'){
+      user.config = req.body.user.config;
+    }
+    return user.save().then(function(){
+      return res.json({user: user.toAuthJSON()});
+    });
   }).catch(next);
 });
 
