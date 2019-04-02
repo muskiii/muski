@@ -52,6 +52,18 @@ UserSchema.methods.toAuthJSON = function () {
   };
 };
 
+UserSchema.methods.toAuthJSONTEST = function () {
+  return {
+    id: this._id,
+    username: this.username,
+    email: this.email,
+    token: this.generateJWT(),
+    bio: this.bio,
+    image: this.image,
+    config: this.config
+  };
+};
+
 UserSchema.plugin(uniqueValidator, { message: 'is already taken.' });
 
 mongoose.model('User', UserSchema); 
