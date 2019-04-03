@@ -2,6 +2,7 @@ import Cookies from 'universal-cookie';
 import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from 'react-admin';
 
 export default (type, params) => {
+    debugger;
     // called when the user attempts to log in
     if (type === AUTH_LOGIN) {
         const { username, password } = params;
@@ -37,20 +38,23 @@ export default (type, params) => {
     }
     // called when the user clicks on the logout button
     if (type === AUTH_LOGOUT) {
-        localStorage.removeItem('username');
+        const cookies = new Cookies();
+        cookies.remove('token');
         return Promise.resolve();
     }
     // called when the API returns an error
     if (type === AUTH_ERROR) {
         const { status } = params;
         if (status === 401 || status === 403) {
-            localStorage.removeItem('username');
+            const cookies = new Cookies();
+            cookies.remove('token');
             return Promise.reject();
         }
         return Promise.resolve();
     }
     // called when the user navigates to a new location
     if (type === AUTH_CHECK) {
+        debugger;
         const cookies = new Cookies();
         const token = cookies.get('token');
         if (!token)

@@ -57,7 +57,6 @@ UserSchema.methods.toAuthJSONTEST = function () {
     id: this._id,
     username: this.username,
     email: this.email,
-    token: this.generateJWT(),
     bio: this.bio,
     image: this.image,
     config: this.config
