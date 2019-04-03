@@ -23,7 +23,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(require('method-override')());
-app.use(express.static(__dirname + '/public'));
+// app.use(express.static(__dirname + '/public'));
+// Serve the static files from the React app
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.use(session({ secret: 'aspen', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }));
 
@@ -41,7 +43,9 @@ if(isProduction){
 require('./models/User');
 require('./config/passport');
 app.use(require('./routes'));
-
+app.get('*', (req,res) =>{
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
