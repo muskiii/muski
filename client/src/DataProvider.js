@@ -12,7 +12,7 @@ import { stringify } from 'query-string';
 import Cookies from 'universal-cookie';
 
 // const API_URL = 'my.api.url';
-const API_URL = 'https://muski.herokuapp.com/api';
+const API_URL = process.env.NODE_ENV === 'production' ? 'https://muski.herokuapp.com/api' : "/api";
 
 /**
  * @param {String} type One of the constants appearing at the top of this file, e.g. 'UPDATE'
@@ -36,7 +36,9 @@ const convertDataProviderRequestToHTTP = (type, resource, params) => {
             const { field, order } = params.sort;
             const query = {
                 sort: JSON.stringify([field, order]),
-                range: JSON.stringify([(page - 1) * perPage, page * perPage - 1]),
+                // range: JSON.stringify([(page - 1) * perPage, page * perPage - 1]),
+                skip: JSON.stringify((page-1)*perPage),
+                limit: JSON.stringify(perPage),
                 filter: JSON.stringify(params.filter),
             };
             return { url: `${API_URL}/${resource}?${stringify(query)}`,options };
@@ -93,8 +95,7 @@ const convertHTTPResponseToDataProvider = (response, type, resource, params) => 
         debugger;
             return {
                 data: json.map(x => x),
-                // total: parseInt(headers.get('content-range').split('/').pop(), 10),
-                total : 2
+                total: parseInt(headers.get('content-range').split('/').pop(), 10),
             };
         case CREATE:
             return { data: { ...params.data, id: json.id } };
@@ -112,7 +113,6 @@ const convertHTTPResponseToDataProvider = (response, type, resource, params) => 
 export default (type, resource, params) => {
     const { fetchJson } = fetchUtils;
     const { url, options } = convertDataProviderRequestToHTTP(type, resource, params);
-    debugger;
     return fetchJson(url, options)
         .then(response => convertHTTPResponseToDataProvider(response, type, resource, params));
 };

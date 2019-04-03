@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var mongoosePaginate = require('mongoose-paginate');
 var uniqueValidator = require('mongoose-unique-validator');
 var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
@@ -52,6 +53,7 @@ UserSchema.methods.toAuthJSON = function () {
   };
 };
 
+//---test---//
 UserSchema.methods.toAuthJSONTEST = function () {
   return {
     id: this._id,
@@ -63,6 +65,15 @@ UserSchema.methods.toAuthJSONTEST = function () {
   };
 };
 
-UserSchema.plugin(uniqueValidator, { message: 'is already taken.' });
+UserSchema.methods.toConfigAuthJSONTEST = function () {
+  return {
+    userId: this._id,
+    id: this._id,
+    minRate: typeof this.config !== "undefined" ? this.config.minRate : "empty" 
+  };
+};
+//---test---//
 
-mongoose.model('User', UserSchema); 
+UserSchema.plugin(uniqueValidator, { message: 'is already taken.' });
+UserSchema.plugin(mongoosePaginate);
+mongoose.model('User', UserSchema);
