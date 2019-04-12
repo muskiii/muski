@@ -1,48 +1,68 @@
-var mongoose = require('mongoose');
-var mongoosePaginate = require('mongoose-paginate');
-var uniqueValidator = require('mongoose-unique-validator');
-var crypto = require('crypto');
-var jwt = require('jsonwebtoken');
-var secret = require('../config').secret;
+var mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+var mongoosePaginate = require("mongoose-paginate");
+var uniqueValidator = require("mongoose-unique-validator");
+var crypto = require("crypto");
+var jwt = require("jsonwebtoken");
+var secret = require("../config").secret;
 
+var UserSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      lowercase: true,
+      unique: true,
+      required: [true, "can't be blank"],
+      match: [/^[a-zA-Z0-9]+$/, "is invalid"],
+      index: true
+    },
+    email: {
+      type: String,
+      lowercase: true,
+      unique: true,
+      required: [true, "can't be blank"],
+      match: [/\S+@\S+\.\S+/, "is invalid"],
+      index: true
+    },
+    bio: String,
+    image: String,
+    hash: String,
+    salt: String,
+    configuration: { type: Schema.Types.ObjectId, ref: "Configuration" }
+  },
+  { timestamps: true }
+);
 
-let configuration = {
-  minRate: { type : Number, required: [true, "can't be blank"] }
-}
-
-var UserSchema = new mongoose.Schema({
-  username: { type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/^[a-zA-Z0-9]+$/, 'is invalid'], index: true },
-  email: { type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/\S+@\S+\.\S+/, 'is invalid'], index: true },
-  bio: String,
-  image: String,
-  hash: String,
-  salt: String,
-  config: {type :configuration, required:false}  
-}, { timestamps: true });
-
-UserSchema.methods.setPassword = function (password) {
-  this.salt = crypto.randomBytes(16).toString('hex');
-  this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
+UserSchema.methods.setPassword = function(password) {
+  this.salt = crypto.randomBytes(16).toString("hex");
+  this.hash = crypto
+    .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
+    .toString("hex");
 };
 
-UserSchema.methods.validPassword = function (password) {
-  var hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
+UserSchema.methods.validPassword = function(password) {
+  var hash = crypto
+    .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
+    .toString("hex");
   return this.hash === hash;
 };
 
-UserSchema.methods.generateJWT = function () {
+UserSchema.methods.generateJWT = function() {
   var today = new Date();
   var exp = new Date(today);
   exp.setDate(today.getDate() + 60);
 
-  return jwt.sign({
-    id: this._id,
-    username: this.username,
-    exp: parseInt(exp.getTime() / 1000),
-  }, secret);
+  return jwt.sign(
+    {
+      id: this._id,
+      username: this.username,
+      exp: parseInt(exp.getTime() / 1000)
+    },
+    secret
+  );
 };
 
-UserSchema.methods.toAuthJSON = function () {
+UserSchema.methods.toAuthJSON = function() {
   return {
     username: this.username,
     email: this.email,
@@ -54,7 +74,7 @@ UserSchema.methods.toAuthJSON = function () {
 };
 
 //---test---//
-UserSchema.methods.toAuthJSONTEST = function () {
+UserSchema.methods.toAuthJSONTEST = function() {
   return {
     id: this._id,
     username: this.username,
@@ -64,16 +84,8 @@ UserSchema.methods.toAuthJSONTEST = function () {
     config: this.config
   };
 };
-
-UserSchema.methods.toConfigAuthJSONTEST = function () {
-  return {
-    userId: this._id,
-    id: this._id,
-    minRate: typeof this.config !== "undefined" ? this.config.minRate : "empty" 
-  };
-};
 //---test---//
 
-UserSchema.plugin(uniqueValidator, { message: 'is already taken.' });
+UserSchema.plugin(uniqueValidator, { message: "is already taken." });
 UserSchema.plugin(mongoosePaginate);
-mongoose.model('User', UserSchema);
+mongoose.model("User", UserSchema);

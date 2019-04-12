@@ -2,9 +2,9 @@ import Cookies from "universal-cookie";
 import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from "react-admin";
 
 const API_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://muski.herokuapp.com/api"
-    : "/api";
+  // process.env.NODE_ENV === "production"
+  //   ? "https://muski.herokuapp.com/api":
+     "/api";
 
 export default (type, params) => {
   // called when the user attempts to log in
@@ -63,7 +63,7 @@ export default (type, params) => {
     const token = cookies.get("token");
     if (!token) return Promise.reject();
 
-    return fetch(`${API_URL}/user`, {
+    return fetch(`${API_URL}/users`, {
       method: "GET",
       headers: {
         Authorization: "Token " + token

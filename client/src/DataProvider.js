@@ -6,6 +6,7 @@ import {
     CREATE,
     UPDATE,
     DELETE,
+    DELETE_MANY,
     fetchUtils,
 } from 'react-admin';
 import { stringify } from 'query-string';
@@ -41,7 +42,7 @@ const convertDataProviderRequestToHTTP = (type, resource, params) => {
                 limit: JSON.stringify(perPage),
                 filter: JSON.stringify(params.filter),
             };
-            return { url: `${API_URL}/${resource}?${stringify(query)}`,options };
+            return { url: `${API_URL}/${resource}/all?${stringify(query)}`,options };
         }
         case GET_ONE:
             return { url: `${API_URL}/${resource}/${params.id}` };
@@ -72,10 +73,21 @@ const convertDataProviderRequestToHTTP = (type, resource, params) => {
                 options: { method: 'POST', body: JSON.stringify(params.data) },
             };
         case DELETE:
+        const query = {
+            filter: JSON.stringify({ id: params.ids }),
+        };
             return {
-                url: `${API_URL}/${resource}/${params.id}`,
-                options: { method: 'DELETE' },
+                url: `${API_URL}/${resource}?${stringify(query)}`,
+                options: { method: 'DELETE' }
             };
+        case DELETE_MANY:
+        const query = {
+            filter: JSON.stringify({ id: params.ids }),
+        };
+            return{
+                url: `${API_URL}/${resource}?${stringify(query)}`,
+                options: { method: 'DELETE' }
+            }
         default:
             throw new Error(`Unsupported fetch action type ${type}`);
     }
@@ -92,7 +104,6 @@ const convertHTTPResponseToDataProvider = (response, type, resource, params) => 
     const { headers, json } = response;
     switch (type) {
         case GET_LIST:
-        debugger;
             return {
                 data: json.map(x => x),
                 total: parseInt(headers.get('content-range').split('/').pop(), 10),
