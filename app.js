@@ -8,7 +8,9 @@ var fs = require('fs'),
     cors = require('cors'),
     passport = require('passport'),
     errorhandler = require('errorhandler'),
-    mongoose = require('mongoose');
+    mongoose = require('mongoose'),
+    config = require('./config')
+
 
 var isProduction = process.env.NODE_ENV === 'production';
 
@@ -36,7 +38,8 @@ if (!isProduction) {
 if(isProduction){
   mongoose.connect(process.env.MONGODB_URI);
 } else {
-  mongoose.connect('mongodb://localhost/muski');
+
+  mongoose.connect(config.MONGODB_URI);
   mongoose.set('debug', true);
 }
 

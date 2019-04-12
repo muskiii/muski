@@ -35,7 +35,7 @@ const convertDataProviderRequestToHTTP = (type, resource, params) => {
             }
             const { page, perPage } = params.pagination;
             const { field, order } = params.sort;
-            const query = {
+            var query = {
                 sort: JSON.stringify([field, order]),
                 // range: JSON.stringify([(page - 1) * perPage, page * perPage - 1]),
                 skip: JSON.stringify((page-1)*perPage),
@@ -47,7 +47,7 @@ const convertDataProviderRequestToHTTP = (type, resource, params) => {
         case GET_ONE:
             return { url: `${API_URL}/${resource}/${params.id}` };
         case GET_MANY: {
-            const query = {
+            var query = {
                 filter: JSON.stringify({ id: params.ids }),
             };
             return { url: `${API_URL}/${resource}?${stringify(query)}` };
@@ -55,7 +55,7 @@ const convertDataProviderRequestToHTTP = (type, resource, params) => {
         case GET_MANY_REFERENCE: {
             const { page, perPage } = params.pagination;
             const { field, order } = params.sort;
-            const query = {
+            var query = {
                 sort: JSON.stringify([field, order]),
                 range: JSON.stringify([(page - 1) * perPage, (page * perPage) - 1]),
                 filter: JSON.stringify({ ...params.filter, [params.target]: params.id }),
@@ -73,7 +73,7 @@ const convertDataProviderRequestToHTTP = (type, resource, params) => {
                 options: { method: 'POST', body: JSON.stringify(params.data) },
             };
         case DELETE:
-        const query = {
+            var query = {
             filter: JSON.stringify({ id: params.ids }),
         };
             return {
@@ -81,7 +81,7 @@ const convertDataProviderRequestToHTTP = (type, resource, params) => {
                 options: { method: 'DELETE' }
             };
         case DELETE_MANY:
-        const query = {
+            var query = {
             filter: JSON.stringify({ id: params.ids }),
         };
             return{
