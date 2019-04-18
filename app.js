@@ -44,6 +44,7 @@ if(isProduction){
 }
 
 require('./models/User');
+require('./models/Entity');
 require('./config/passport');
 app.use(require('./routes'));
 app.get('*', (req,res) =>{
