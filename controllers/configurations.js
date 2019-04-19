@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 var Configuration = mongoose.model("Configuration");
+var User = mongoose.model("User");
 
 exports.getById = function(req, res, next) {
   Configuration.findById(req.payload.id)
@@ -77,7 +78,6 @@ exports.updateConfiguration = function(req, res, next) {
         conf.maxRate = req.body.conf.maxRate;
       }
 
-
       return conf.save().then(function() {
         return res.json({ conf: conf.toAuthJSON() });
       });
@@ -86,15 +86,23 @@ exports.updateConfiguration = function(req, res, next) {
 };
 
 exports.create = function(req, res, next) {
-  var conf = new Configuration();
-  conf.name = req.body.conf.name;
-  conf.minRate = req.body.conf.minRate;
-  conf.maxRate = req.body.conf.maxRate;
-
-  conf
-    .save()
-    .then(function() {
-      return res.json({ conf: conf.toAuthJSON() });
+  User.findById(req.payload.id)
+    .then(function(user) {
+      if (!user) return res.sendStatus(401);
+      var config = new Configuration();
+      config.name = req.body.config.name;
+      config.untilRank = req.body.config.untilRank;
+      config.user = user._id;
+      config
+        .save()
+        .then(function(err) {
+          Configuration.findById(config.id)
+            .populate("user")
+            .exec(function(error, doc) {
+              return res.json({ doc });
+            });
+        })
+        .catch(next);
     })
     .catch(next);
 };

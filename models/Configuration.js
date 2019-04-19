@@ -1,5 +1,4 @@
 var mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 var mongoosePaginate = require("mongoose-paginate");
 var uniqueValidator = require("mongoose-unique-validator");
 
@@ -8,13 +7,13 @@ var ConfigSchema = new mongoose.Schema(
     name: {
       type: String,
       lowercase: true,
-      unique: true,
+      // unique: true,
       required: [true, "can't be blank"],
       match: [/^[a-zA-Z0-9]+$/, "is invalid"],
-      index: true
+      // index: true
     },
-    minRate: { type: Number, required: [true, "can't be blank"] },
-    maxRate: { type: Number, required: [true, "can't be blank"] }
+    untilRank: { type: Number, required: [true, "can't be blank"] },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   },
   { timestamps: true }
 );
@@ -22,8 +21,7 @@ var ConfigSchema = new mongoose.Schema(
 ConfigSchema.methods.toAuthJSON = function() {
   return {
     name: this.name,
-    minRate: this.minRate,
-    maxRate: this.maxRate
+    untilRank: this.untilRank
   };
 };
 

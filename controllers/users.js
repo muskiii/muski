@@ -4,13 +4,13 @@ var User = mongoose.model("User");
 
 exports.getById = function(req, res, next) {
   User.findById(req.payload.id)
-    .then(function(user) {
+  .populate("configurations")
+  .exec(function(error, user) {
       if (!user) {
-        return res.sendStatus(401);
+        return next;
       }
       return res.json({ user: user.toAuthJSON() });
     })
-    .catch(next);
 };
 
 exports.get = function(req, res, next) {
@@ -130,3 +130,4 @@ exports.login = function(req, res, next) {
     }
   })(req, res, next);
 };
+

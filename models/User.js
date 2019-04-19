@@ -1,10 +1,10 @@
 var mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 var mongoosePaginate = require("mongoose-paginate");
 var uniqueValidator = require("mongoose-unique-validator");
 var crypto = require("crypto");
 var jwt = require("jsonwebtoken");
 var secret = require("../config").secret;
+const configuration = require("./Configuration");
 
 var UserSchema = new mongoose.Schema(
   {
@@ -24,11 +24,9 @@ var UserSchema = new mongoose.Schema(
       match: [/\S+@\S+\.\S+/, "is invalid"],
       index: true
     },
-    bio: String,
-    image: String,
     hash: String,
     salt: String,
-    configuration: { type: Schema.Types.ObjectId, ref: "Configuration" }
+    // configurations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Configuration' }]
   },
   { timestamps: true }
 );
@@ -67,24 +65,9 @@ UserSchema.methods.toAuthJSON = function() {
     username: this.username,
     email: this.email,
     token: this.generateJWT(),
-    bio: this.bio,
-    image: this.image,
-    config: this.config
+    // configurations: this.configurations
   };
 };
-
-//---test---//
-UserSchema.methods.toAuthJSONTEST = function() {
-  return {
-    id: this._id,
-    username: this.username,
-    email: this.email,
-    bio: this.bio,
-    image: this.image,
-    config: this.config
-  };
-};
-//---test---//
 
 UserSchema.plugin(uniqueValidator, { message: "is already taken." });
 UserSchema.plugin(mongoosePaginate);
