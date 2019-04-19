@@ -98,8 +98,8 @@ exports.create = function(req, res, next) {
         .then(function(err) {
           Configuration.findById(config.id)
             .populate("user")
-            .exec(function(error, doc) {
-              return res.json({ doc });
+            .exec(function(error, configuration) {
+              return res.json({ configuration });
             });
         })
         .catch(next);

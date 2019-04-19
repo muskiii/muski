@@ -4,7 +4,7 @@ var uniqueValidator = require("mongoose-unique-validator");
 var crypto = require("crypto");
 var jwt = require("jsonwebtoken");
 var secret = require("../config").secret;
-const configuration = require("./Configuration");
+require("./Configuration");
 
 var UserSchema = new mongoose.Schema(
   {
