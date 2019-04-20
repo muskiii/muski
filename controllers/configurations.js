@@ -86,20 +86,22 @@ exports.updateConfiguration = function(req, res, next) {
 };
 
 exports.create = function(req, res, next) {
+  let {name, untilRank, scale} = req.body.config;
   User.findById(req.payload.id)
     .then(function(user) {
       if (!user) return res.sendStatus(401);
       var config = new Configuration();
-      config.name = req.body.config.name;
-      config.untilRank = req.body.config.untilRank;
+      config.name = name;
+      config.untilRank = untilRank;
+      config.scale = scale;
       config.user = user._id;
       config
         .save()
         .then(function(err) {
           Configuration.findById(config.id)
-            .populate("user")
+            // .populate("user")
             .exec(function(error, configuration) {
-              return res.json({ configuration });
+              return res.json({ configuration: configuration.toDTO() });
             });
         })
         .catch(next);

@@ -12,16 +12,18 @@ var ConfigSchema = new mongoose.Schema(
       match: [/^[a-zA-Z0-9]+$/, "is invalid"],
       // index: true
     },
+    scale: {type: Number, min:3},
     untilRank: { type: Number, required: [true, "can't be blank"] },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   },
   { timestamps: true }
 );
 
-ConfigSchema.methods.toAuthJSON = function() {
+ConfigSchema.methods.toDTO = function() {
   return {
     name: this.name,
-    untilRank: this.untilRank
+    untilRank: this.untilRank,
+    scale: this.scale
   };
 };
 
