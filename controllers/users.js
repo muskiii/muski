@@ -40,7 +40,7 @@ exports.get = function(req, res, next) {
         "Content-Range",
         `10 ${result.offset}-${result.offset + result.limit}/${result.total}`
       );
-      return res.json(result.docs.map(user => user.toAuthJSONTEST()));
+      return res.json(result.docs.map(user => user));
     })
     .catch(next);
 };

@@ -7,10 +7,10 @@ var ConfigSchema = new mongoose.Schema(
     name: {
       type: String,
       lowercase: true,
-      // unique: true,
+      unique: true,
       required: [true, "can't be blank"],
       match: [/^[a-zA-Z0-9]+$/, "is invalid"],
-      // index: true
+      index: true
     },
     scale: {type: Number, min:3},
     untilRank: { type: Number, required: [true, "can't be blank"] },

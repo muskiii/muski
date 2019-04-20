@@ -61,23 +61,13 @@ exports.deletebyId = function(req, res, next) {
 };
 
 exports.updateConfiguration = function(req, res, next) {
+  let { scale, untilRank } = req.body.conf;
   Configuration.findById(req.payload.id)
     .then(function(conf) {
-      if (!conf) {
-        return res.sendStatus(401);
-      }
+      if (!conf) return res.sendStatus(500);
 
-      // only update fields that were actually passed...
-      if (typeof req.body.conf.name !== "undefined") {
-        conf.name = req.body.conf.name;
-      }
-      if (typeof req.body.conf.minRate !== "undefined") {
-        conf.minRate = req.body.conf.maxRate;
-      }
-      if (typeof req.body.conf.maxRate !== "undefined") {
-        conf.maxRate = req.body.conf.maxRate;
-      }
-
+      if (typeof untilRank !== "undefined") conf.untilRank = untilRank;
+      if (typeof scale !== "undefined") conf.scale = scale;
       return conf.save().then(function() {
         return res.json({ conf: conf.toAuthJSON() });
       });
@@ -86,7 +76,7 @@ exports.updateConfiguration = function(req, res, next) {
 };
 
 exports.create = function(req, res, next) {
-  let {name, untilRank, scale} = req.body.config;
+  let { name, untilRank, scale } = req.body.config;
   User.findById(req.payload.id)
     .then(function(user) {
       if (!user) return res.sendStatus(401);
