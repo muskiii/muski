@@ -1,16 +1,25 @@
 var mongoose = require("mongoose");
 var passport = require("passport");
 var User = mongoose.model("User");
+var FBUser = mongoose.model("FBUser");
 
 exports.getById = function(req, res, next) {
   User.findById(req.payload.id)
-  .populate("configurations")
-  .exec(function(error, user) {
+    .populate("configurations")
+    .exec(function(error, user) {
       if (!user) {
         return next;
       }
       return res.json({ user: user.toAuthJSON() });
-    })
+    });
+};
+exports.getByFBId = function(req, res, next) {
+  User.findOne(req.param.id).then(function(user) {
+    if (!user) {
+      return res.sendStatus(404);
+    }
+    return res.json({ user: user.toAuthJSON() });
+  })
 };
 
 exports.get = function(req, res, next) {
@@ -74,17 +83,8 @@ exports.updateUser = function(req, res, next) {
       if (typeof req.body.user.email !== "undefined") {
         user.email = req.body.user.email;
       }
-      if (typeof req.body.user.bio !== "undefined") {
-        user.bio = req.body.user.bio;
-      }
-      if (typeof req.body.user.image !== "undefined") {
-        user.image = req.body.user.image;
-      }
       if (typeof req.body.user.password !== "undefined") {
         user.setPassword(req.body.user.password);
-      }
-      if (typeof req.body.user.config !== "undefined") {
-        user.config = req.body.user.config;
       }
 
       return user.save().then(function() {
@@ -95,17 +95,31 @@ exports.updateUser = function(req, res, next) {
 };
 
 exports.create = function(req, res, next) {
-  var user = new User();
-  user.username = req.body.user.username;
-  user.email = req.body.user.email;
-  user.setPassword(req.body.user.password);
+  if (typeof req.body.id !== "undefined") {
+    var fbUser = new FBUser();
+    fbUser.fbId = req.body.id;
+    fbUser.username = req.body.username;
+    fbUser.email = req.body.email;
 
-  user
-    .save()
-    .then(function() {
-      return res.json({ user: user.toAuthJSON() });
-    })
-    .catch(next);
+    fbUser
+      .save()
+      .then(function() {
+        return res.json({ fbUser: fbUser.toAuthJSON() });
+      })
+      .catch(next);
+  } else {
+    var user = new User();
+    user.username = req.body.username;
+    user.email = req.body.email;
+    user.setPassword(req.body.password);
+
+    user
+      .save()
+      .then(function() {
+        return res.json({ user: user.toAuthJSON() });
+      })
+      .catch(next);
+  }
 };
 
 exports.login = function(req, res, next) {
@@ -130,4 +144,3 @@ exports.login = function(req, res, next) {
     }
   })(req, res, next);
 };
-

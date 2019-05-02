@@ -5,6 +5,9 @@ var controller = require("../../controllers/users");
 router.get("/users", auth.required, function(req, res, next) {
   controller.getById(req, res, next);
 });
+router.get("/users/fb/:id", function(req, res, next) {
+  controller.getByFBId(req, res, next);
+});
 
 router.delete("/users", function(req, res, next) {
   controller.deletebyId(req, res, next);

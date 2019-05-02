@@ -43,6 +43,7 @@ if(isProduction){
   mongoose.set('debug', true);
 }
 
+require('./models/FBUser');
 require('./models/User');
 require('./models/Configuration')
 require('./models/Entity');
