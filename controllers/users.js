@@ -14,7 +14,7 @@ exports.getById = function(req, res, next) {
     });
 };
 exports.getByFBId = function(req, res, next) {
-  User.findOne(req.param.id).then(function(user) {
+  FBUser.findOne({fbId:req.params.id}).then(function(user) {
     if (!user) {
       return res.sendStatus(404);
     }

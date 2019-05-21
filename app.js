@@ -45,11 +45,14 @@ if(isProduction){
 
 require('./models/FBUser');
 require('./models/User');
-require('./models/Configuration')
+require('./models/Configuration');
 require('./models/Entity');
 require('./config/passport');
 app.use(require('./routes'));
-app.get('*', (req,res) =>{
+app.get('/', (req,res) =>{
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
+app.get('/admin', (req,res) =>{
   res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
 /// catch 404 and forward to error handler
