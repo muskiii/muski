@@ -14,9 +14,12 @@ var cacheMiddleware = duration => {
     res.json(req.body);
   };
 };
+router.delete("/", function(req, res, next) {
+  return res.json(myCache.set(key, [], 60 * 1000));
+});
 router.get("/", function(req, res, next) {
   return res.json(myCache.get(key));
 });
-router.post("/", cacheMiddleware(600));
+router.post("/", cacheMiddleware(60));
 
 module.exports = router;
