@@ -35,7 +35,7 @@ router.get("/panic", function(req, res, next) {
   let lastPosition = testArray[testArray.length - 1];
 
   let data = fs.readFileSync(
-    __dirname + "/../../public/testViewTemplate.html",
+    __dirname + "/../../public/testViewTemplate2.html",
     "utf-8"
   );
 
