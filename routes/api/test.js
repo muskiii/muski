@@ -11,7 +11,12 @@ var cacheEveryRequest = duration => {
     if (cacheContent == null) {
       cacheContent = [];
     }
+    if(req.body.id){
+      cacheContent = cacheContent.filter(e => e.id != req.body.id);
+    }
+    
     cacheContent.push(req.body);
+
     myCache.set(key, cacheContent, duration * 1000);
     res.json(req.body);
   };
@@ -30,9 +35,10 @@ router.get("/", function(req, res, next) {
 //   return res.json(lastPosition);
 // });
 
-router.get("/panic", function(req, res, next) {
+router.get("/panic/:id", function(req, res, next) {
+  let {id} = req.params;
   let testArray = myCache.get(key);
-  let lastPosition = testArray[testArray.length - 1];
+  let lastPosition = testArray.find(e => e.id = id);
 
   let data = fs.readFileSync(
     __dirname + "/../../public/testViewTemplate2.html",
@@ -40,6 +46,9 @@ router.get("/panic", function(req, res, next) {
   );
 
   let newIndex = data.replace("/*!*long*/", parseFloat(lastPosition.longitude));
+  newIndex = newIndex.replace("/*!*lat*/", parseFloat(lastPosition.latitude));
+
+  newIndex = newIndex.replace("/*!*long*/", parseFloat(lastPosition.longitude));
   newIndex = newIndex.replace("/*!*lat*/", parseFloat(lastPosition.latitude));
 
   fs.unlink(__dirname + "/../../public/testView.html", err => {
