@@ -1,87 +1,76 @@
-
 <!doctype html>
 <html lang="en">
-  <head>
-     <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css" type="text/css">
-    <style>
-      .map {
-        height: 800px;
-        width: 100%;
-      }
-	  #popup-content b {
-		color:red;
-		font-size:50px;
-	  }
-    </style>
-     <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
-    <title>OpenLayers example</title>
-  </head>
-  <body>
-    <h2>My Map</h2>
-    <div id="map" class="map"></div>
-	 <div id="popup" class="ol-popup">
-     <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-     <div id="popup-content"></div>
+
+<head>
+	<link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css"
+		type="text/css">
+	<style>
+		.map {
+			height: 800px;
+			width: 100%;
+		}
+
+		#popup-content b {
+			color: red;
+			font-size: 50px;
+		}
+	</style>
+	<script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+	<title>OpenLayers example</title>
+</head>
+
+<body>
+	<h2>My Map</h2>
+	<div id="map" class="map"></div>
+	<div id="popup" class="ol-popup">
+		<a href="#" id="popup-closer" class="ol-popup-closer"></a>
+		<div id="popup-content"></div>
 	</div>
-    <script type="text/javascript">
-      var attribution = new ol.control.Attribution({
-     collapsible: false
-	});
+	<script type="text/javascript">
+		var attribution = new ol.control.Attribution({
+			collapsible: false
+		});
 
-	 var map = new ol.Map({
-		 controls: ol.control.defaults({attribution: false}).extend([attribution]),
-		 layers: [
-			 new ol.layer.Tile({
-				source: new ol.source.OSM()
-			 })
-		 ],
-		 target: 'map',
-		 view: new ol.View({
-			 center: ol.proj.fromLonLat([/*!*long*/,/*!*lat*/]),
-			 maxZoom: 18,
-			 zoom: 12
-		 })
-	 });
-	  var layer = new ol.layer.Vector({
-		 source: new ol.source.Vector({
-			 features: [
-				 new ol.Feature({
-					 geometry: new ol.geom.Point(ol.proj.fromLonLat([/*!*long*/,/*!*lat*/]))
-				 })
-			 ]
-		 })
-	 });
-	 map.addLayer(layer);
-	  var container = document.getElementById('popup');
-	 var content = document.getElementById('popup-content');
-	 var closer = document.getElementById('popup-closer');
+		var map = new ol.Map({
+			controls: ol.control.defaults({ attribution: false }).extend([attribution]),
+			layers: [
+				new ol.layer.Tile({
+					source: new ol.source.OSM()
+				})
+			],
+			target: 'map',
+			view: new ol.View({
+				center: ol.proj.fromLonLat([REPLACELONG,REPLACELAT]),
+				maxZoom: 18,
+				zoom: 18
+			})
+		});
+		var layer = new ol.layer.Vector({
+			source: new ol.source.Vector({
+				features: [
+					new ol.Feature({
+						geometry: new ol.geom.Point(ol.proj.fromLonLat([REPLACELONG,REPLACELAT]))
+					})
+				]
+			})
+		});
+		map.addLayer(layer);
 
-	 var overlay = new ol.Overlay({
-		 element: container,
-		 autoPan: true,
-		 autoPanAnimation: {
-			 duration: 250
-		 }
-	 });
-	 map.addOverlay(overlay);
+		var container = document.getElementById('popup');
+		var content = document.getElementById('popup-content');
+		var closer = document.getElementById('popup-closer');
 
-	 closer.onclick = function() {
-		 overlay.setPosition(undefined);
-		 closer.blur();
-		 return false;
-	 };
-	  map.on('pointermove', function (event) {
-     if (map.hasFeatureAtPixel(event.pixel) === true) {
-         var coordinate = event.coordinate;
+		var overlay = new ol.Overlay({
+			element: container,
+			autoPan: true,
+			autoPanAnimation: {
+				duration: 250
+			}
+		});
+		map.addOverlay(overlay);
+		content.innerHTML = '<b>HERE</b><br/>REPLACENAME might be in Danger.';
+		overlay.setPosition(ol.proj.fromLonLat([REPLACELONG,REPLACELAT]));
+	</script>
+</body>
 
-         content.innerHTML = '<b>AYUDAAAAAAAAAAA!</b><br />';
-         overlay.setPosition(coordinate);
-     } else {
-         overlay.setPosition(undefined);
-         closer.blur();
-	 }
-	});
-
-    </script>
-  </body>
 </html>

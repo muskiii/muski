@@ -29,12 +29,6 @@ router.get("/", function(req, res, next) {
   return res.json(myCache.get(key));
 });
 
-// router.get("/panic", function(req, res, next) {
-//   let testArray = myCache.get(key);
-//   let lastPosition = testArray[testArray.length -1];
-//   return res.json(lastPosition);
-// });
-
 router.get("/panic/:id", function(req, res, next) {
   let {id} = req.params;
   let testArray = myCache.get(key);
@@ -45,11 +39,10 @@ router.get("/panic/:id", function(req, res, next) {
     "utf-8"
   );
 
-  let newIndex = data.replace("/*!*long*/", parseFloat(lastPosition.longitude));
-  newIndex = newIndex.replace("/*!*lat*/", parseFloat(lastPosition.latitude));
+  let newIndex = data.replace(/REPLACELONG/g, parseFloat(lastPosition.longitude));
+  newIndex = newIndex.replace(/REPLACELAT/g, parseFloat(lastPosition.latitude));
+  newIndex = newIndex.replace(/REPLACENAME/g, lastPosition.userName);
 
-  newIndex = newIndex.replace("/*!*long*/", parseFloat(lastPosition.longitude));
-  newIndex = newIndex.replace("/*!*lat*/", parseFloat(lastPosition.latitude));
 
   fs.unlink(__dirname + "/../../public/testView.html", err => {
     if (err) console.log(__dirname + "/../../public/testView.html");
